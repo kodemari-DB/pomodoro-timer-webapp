@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ポモドーロタイマー</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="app__header">
+      <h1>ポモドーロタイマー</h1>
+      <p class="app__subtitle">作業25分 / 休憩5分</p>
+    </header>
+
+    <section class="timer">
+      <div class="timer__display">
+        <span class="timer__phase" id="phaseLabel">作業中</span>
+        <span class="timer__time" id="timeDisplay">25:00</span>
+      </div>
+      <div class="timer__controls">
+        <button class="btn" id="startButton">Start</button>
+        <button class="btn" id="pauseButton">Pause</button>
+        <button class="btn btn--secondary" id="resetButton">Reset</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
