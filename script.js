@@ -2,8 +2,10 @@
   const WORK_DURATION = 25 * 60; // seconds
   const BREAK_DURATION = 5 * 60; // seconds
 
-  const phaseLabel = document.getElementById('phaseLabel');
-  const timeDisplay = document.getElementById('timeDisplay');
+  const phaseLabels = document.querySelectorAll('[data-role="phase-label"]');
+  const timeDisplays = document.querySelectorAll('[data-role="time-display"]');
+  const progressCircle = document.getElementById('progressCircle');
+  const viewToggle = document.getElementById('viewToggle');
   const startButton = document.getElementById('startButton');
   const pauseButton = document.getElementById('pauseButton');
   const resetButton = document.getElementById('resetButton');
@@ -24,10 +26,30 @@
   };
 
   const updateDisplay = () => {
-    timeDisplay.textContent = formatTime(state.remainingSeconds);
+    const formatted = formatTime(state.remainingSeconds);
+    timeDisplays.forEach((el) => {
+      el.textContent = formatted;
+    });
+
     const isWork = state.phase === 'work';
-    phaseLabel.textContent = isWork ? '作業中' : '休憩中';
-    phaseLabel.classList.toggle('timer__phase--break', !isWork);
+    phaseLabels.forEach((label) => {
+      label.textContent = isWork ? '作業中' : '休憩中';
+      label.classList.toggle('timer__phase--break', !isWork);
+    });
+
+    updateProgressCircle();
+  };
+
+  const updateProgressCircle = () => {
+    if (!progressCircle) return;
+    const radius = progressCircle.r.baseVal.value;
+    const circumference = 2 * Math.PI * radius;
+    const totalSeconds = state.phase === 'work' ? WORK_DURATION : BREAK_DURATION;
+    const progress = state.remainingSeconds / totalSeconds;
+    progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+    progressCircle.style.strokeDashoffset = `${circumference * (1 - progress)}`;
+
+    progressCircle.style.stroke = state.phase === 'work' ? 'var(--accent)' : '#38bdf8';
   };
 
   const stopTimer = () => {
@@ -94,9 +116,19 @@
     updateDisplay();
   };
 
+  const toggleView = () => {
+    const current = document.body.getAttribute('data-view') || '1';
+    const next = current === '1' ? '2' : '1';
+    document.body.setAttribute('data-view', next);
+    viewToggle.textContent = next === '1' ? '見た目②' : '見た目①';
+    const analogVisible = next === '2';
+    document.querySelector('.timer__view--analog')?.setAttribute('aria-hidden', (!analogVisible).toString());
+  };
+
   startButton.addEventListener('click', startTimer);
   pauseButton.addEventListener('click', pauseTimer);
   resetButton.addEventListener('click', resetTimer);
+  viewToggle.addEventListener('click', toggleView);
 
   updateDisplay();
 })();
