@@ -29,7 +29,7 @@ main.app {
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
-  aspect-ratio: calc(1 / 1.1);
+  aspect-ratio: calc(1 / 1.2);
 }
 
 .app__header {
