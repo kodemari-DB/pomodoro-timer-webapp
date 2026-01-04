@@ -13,18 +13,25 @@
         <h1>ポモドーロタイマー</h1>
         <p class="app__subtitle">作業25分 / 休憩5分</p>
       </div>
-      <button class="btn btn--ghost" id="viewToggle" aria-live="polite">見た目②</button>
+      <div class="view-switcher">
+        <label for="viewSelect">見た目</label>
+        <select id="viewSelect" aria-label="見た目を選択">
+          <option value="1">見た目①（クラシック）</option>
+          <option value="2">見た目②（アナログ）</option>
+          <option value="3">見た目③（モノクロ）</option>
+        </select>
+      </div>
     </header>
 
     <section class="timer">
-      <div class="timer__view timer__view--classic">
+      <div class="timer__view timer__view--classic" data-view="1">
         <div class="timer__display">
           <span class="timer__phase" data-role="phase-label">作業中</span>
           <span class="timer__time" data-role="time-display">25:00</span>
         </div>
       </div>
 
-      <div class="timer__view timer__view--analog" aria-hidden="true">
+      <div class="timer__view timer__view--analog" aria-hidden="true" data-view="2">
         <div class="circle-timer">
           <svg class="circle-timer__svg" viewBox="0 0 260 260" role="img" aria-label="残り時間の円形表示">
             <circle class="circle-timer__track" cx="130" cy="130" r="110" />
@@ -33,6 +40,23 @@
           <div class="circle-timer__center">
             <span class="timer__phase" data-role="phase-label">作業中</span>
             <span class="timer__time" data-role="time-display">25:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="timer__view timer__view--flat" aria-hidden="true" data-view="3">
+        <div class="flat-panel">
+          <div class="flat-panel__header">
+            <span class="flat-panel__label">ポモドーロ</span>
+            <span class="flat-panel__phase" data-role="phase-label">作業中</span>
+          </div>
+          <div class="flat-panel__time" data-role="time-display">25:00</div>
+          <div class="flat-progress" aria-hidden="true">
+            <div class="flat-progress__fill"></div>
+          </div>
+          <div class="flat-panel__legend">
+            <span>残り時間</span>
+            <span data-role="phase-label">作業中</span>
           </div>
         </div>
       </div>

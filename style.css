@@ -1,17 +1,16 @@
-:root {
+* {
+  box-sizing: border-box;
+}
+
+body {
   --bg: #0f172a;
   --card: #111827;
   --accent: #f97316;
   --text: #e5e7eb;
   --muted: #9ca3af;
   --success: #22c55e;
-}
+  --border: rgba(255, 255, 255, 0.08);
 
-* {
-  box-sizing: border-box;
-}
-
-body {
   margin: 0;
   font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--bg);
@@ -51,6 +50,27 @@ main.app {
   font-size: 14px;
 }
 
+.view-switcher {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.view-switcher select {
+  background: transparent;
+  color: inherit;
+  border: 1px solid var(--border);
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
 .timer {
   display: grid;
   gap: 24px;
@@ -61,7 +81,8 @@ main.app {
 }
 
 body[data-view="1"] .timer__view--classic,
-body[data-view="2"] .timer__view--analog {
+body[data-view="2"] .timer__view--analog,
+body[data-view="3"] .timer__view--flat {
   display: block;
 }
 
@@ -143,9 +164,9 @@ body[data-view="2"] .timer__view--analog {
 .btn.btn--ghost {
   width: auto;
   background: transparent;
-  color: var(--text);
+  color: inherit;
   box-shadow: none;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 1px solid var(--border);
   padding: 12px 14px;
 }
 
@@ -225,4 +246,149 @@ body[data-view="2"] .timer__view--analog {
 
 .circle-timer .timer__time {
   font-size: clamp(44px, 18vw, 64px);
+}
+
+/* View 3: monochrome flat */
+body[data-view="3"] {
+  --bg: #f5f7fa;
+  --card: #ffffff;
+  --accent: #111827;
+  --text: #0f172a;
+  --muted: #6b7280;
+  --success: #111827;
+  --border: #e5e7eb;
+}
+
+body[data-view="3"] main.app {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--border);
+}
+
+body[data-view="3"] .app__subtitle {
+  color: var(--muted);
+}
+
+body[data-view="3"] .timer__display {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.01));
+  border: 1px solid var(--border);
+}
+
+body[data-view="3"] .timer__phase,
+body[data-view="3"] .circle-timer .timer__phase {
+  background: rgba(17, 24, 39, 0.08);
+  color: var(--text);
+}
+
+body[data-view="3"] .timer__phase.timer__phase--break,
+body[data-view="3"] .circle-timer .timer__phase.timer__phase--break {
+  background: rgba(17, 24, 39, 0.12);
+  color: var(--text);
+}
+
+body[data-view="3"] .circle-timer {
+  background: var(--card);
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+
+body[data-view="3"] .circle-timer__track {
+  stroke: #e5e7eb;
+}
+
+body[data-view="3"] .circle-timer__progress {
+  stroke: #111827;
+}
+
+body[data-view="3"] .btn {
+  background: #111827;
+  color: #f5f7fa;
+  box-shadow: none;
+  border: 1px solid #111827;
+}
+
+body[data-view="3"] .btn:hover {
+  background: #0b1222;
+}
+
+body[data-view="3"] .btn.btn--secondary {
+  background: #f9fafb;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+body[data-view="3"] .btn.btn--secondary:hover {
+  background: #eef0f3;
+}
+
+body[data-view="3"] .view-switcher {
+  background: #f9fafb;
+}
+
+body[data-view="3"] .view-switcher select {
+  border-color: #d1d5db;
+}
+
+.timer__view--flat .flat-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+  display: grid;
+  gap: 12px;
+  box-shadow: none;
+}
+
+.flat-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.flat-panel__label {
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+.flat-panel__phase {
+  padding: 6px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.flat-panel__phase.timer__phase--break {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.flat-panel__time {
+  font-size: clamp(52px, 18vw, 72px);
+  letter-spacing: 0.08em;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+.flat-progress {
+  width: 100%;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.flat-progress__fill {
+  height: 100%;
+  width: 100%;
+  background: var(--accent);
+  transform-origin: left;
+  transition: width 0.4s ease;
+}
+
+.flat-panel__legend {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 13px;
 }
