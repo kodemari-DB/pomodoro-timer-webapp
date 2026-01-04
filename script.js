@@ -6,7 +6,9 @@
   const phaseLabels = document.querySelectorAll('[data-role="phase-label"]');
   const timeDisplays = document.querySelectorAll('[data-role="time-display"]');
   const progressCircle = document.getElementById('progressCircle');
-  const viewToggle = document.getElementById('viewToggle');
+  const flatProgressFill = document.querySelector('.flat-progress__fill');
+  const viewSelect = document.getElementById('viewSelect');
+  const timerViews = document.querySelectorAll('.timer__view');
   const startButton = document.getElementById('startButton');
   const pauseButton = document.getElementById('pauseButton');
   const resetButton = document.getElementById('resetButton');
@@ -46,8 +48,6 @@
     const radius = progressCircle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
     const progress = Math.max(0, Math.min(1, state.remainingSeconds / RING_FULL_SECONDS));
-    progressCircle.style.strokeDasharray = `${progress * circumference} ${circumference}`;
-    progressCircle.style.strokeDashoffset = '0';
 
     progressCircle.style.stroke = state.phase === 'work' ? 'var(--accent)' : '#38bdf8';
   };
@@ -116,19 +116,27 @@
     updateDisplay();
   };
 
-  const toggleView = () => {
-    const current = document.body.getAttribute('data-view') || '1';
-    const next = current === '1' ? '2' : '1';
-    document.body.setAttribute('data-view', next);
-    viewToggle.textContent = next === '1' ? '見た目②' : '見た目①';
-    const analogVisible = next === '2';
-    document.querySelector('.timer__view--analog')?.setAttribute('aria-hidden', (!analogVisible).toString());
+  const setView = (viewId) => {
+    document.body.setAttribute('data-view', viewId);
+    if (viewSelect && viewSelect.value !== viewId) {
+      viewSelect.value = viewId;
+    }
+    timerViews.forEach((view) => {
+      const isActive = view.dataset.view === viewId;
+      view.setAttribute('aria-hidden', (!isActive).toString());
+    });
+  };
+
+  const handleViewChange = (event) => {
+    const viewId = event.target.value;
+    setView(viewId);
   };
 
   startButton.addEventListener('click', startTimer);
   pauseButton.addEventListener('click', pauseTimer);
   resetButton.addEventListener('click', resetTimer);
-  viewToggle.addEventListener('click', toggleView);
+  viewSelect?.addEventListener('change', handleViewChange);
 
+  setView(document.body.getAttribute('data-view') || '1');
   updateDisplay();
 })();
