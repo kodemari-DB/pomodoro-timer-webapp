@@ -50,6 +50,47 @@ main.app {
   font-size: 14px;
 }
 
+.settings {
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.settings__fields {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  min-width: 240px;
+}
+
+.settings__field {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.settings__field input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(0, 0, 0, 0.1);
+  color: inherit;
+  font-size: 15px;
+}
+
+.settings__apply {
+  white-space: nowrap;
+}
+
 .view-switcher {
   display: flex;
   align-items: center;
@@ -331,6 +372,16 @@ body[data-view="3"] .view-switcher {
 
 body[data-view="3"] .view-switcher select {
   border-color: #d1d5db;
+}
+
+body[data-view="3"] .settings {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+body[data-view="3"] .settings__field input {
+  background: #ffffff;
+  border-color: #e5e7eb;
 }
 
 .timer__view--flat .flat-panel {
