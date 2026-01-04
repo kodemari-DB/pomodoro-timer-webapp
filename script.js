@@ -49,6 +49,8 @@
     const circumference = 2 * Math.PI * radius;
     const progress = Math.max(0, Math.min(1, state.remainingSeconds / RING_FULL_SECONDS));
 
+    progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+    progressCircle.style.strokeDashoffset = circumference * (1 - progress);
     progressCircle.style.stroke = state.phase === 'work' ? 'var(--accent)' : '#38bdf8';
   };
 
