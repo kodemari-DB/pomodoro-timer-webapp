@@ -1,6 +1,6 @@
 (() => {
-  const WORK_DURATION = 25 * 60; // seconds
-  const BREAK_DURATION = 5 * 60; // seconds
+  let workDuration = 25 * 60; // seconds
+  let breakDuration = 5 * 60; // seconds
   const RING_FULL_SECONDS = 60 * 60; // progress ring always represents 60 minutes
 
   const phaseLabels = document.querySelectorAll('[data-role="phase-label"]');
@@ -12,15 +12,20 @@
   const startButton = document.getElementById('startButton');
   const pauseButton = document.getElementById('pauseButton');
   const resetButton = document.getElementById('resetButton');
+  const settingsButton = document.getElementById('settingsButton');
+  const settingsModal = document.getElementById('settingsModal');
+  const settingsForm = document.getElementById('settingsForm');
+  const workMinutesInput = document.getElementById('workMinutes');
+  const breakMinutesInput = document.getElementById('breakMinutes');
 
   const state = {
     phase: 'work', // 'work' | 'break'
-    remainingSeconds: WORK_DURATION,
+    remainingSeconds: workDuration,
     isRunning: false,
     intervalId: null,
   };
 
-  const getPhaseDuration = () => (state.phase === 'work' ? WORK_DURATION : BREAK_DURATION);
+  const getPhaseDuration = () => (state.phase === 'work' ? workDuration : breakDuration);
 
   const formatTime = (totalSeconds) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -124,7 +129,7 @@
   const resetTimer = () => {
     stopTimer();
     state.phase = 'work';
-    state.remainingSeconds = WORK_DURATION;
+    state.remainingSeconds = workDuration;
     updateDisplay();
   };
 
@@ -144,10 +149,43 @@
     setView(viewId);
   };
 
+  const openModal = () => {
+    settingsModal?.classList.add('is-open');
+    settingsModal?.setAttribute('aria-hidden', 'false');
+    workMinutesInput.value = Math.round(workDuration / 60).toString();
+    breakMinutesInput.value = Math.round(breakDuration / 60).toString();
+  };
+
+  const closeModal = () => {
+    settingsModal?.classList.remove('is-open');
+    settingsModal?.setAttribute('aria-hidden', 'true');
+  };
+
+  const handleSettingsSubmit = (event) => {
+    event.preventDefault();
+    const workMinutes = Math.max(1, Math.min(180, Number(workMinutesInput.value) || 25));
+    const breakMinutes = Math.max(1, Math.min(180, Number(breakMinutesInput.value) || 5));
+
+    workDuration = workMinutes * 60;
+    breakDuration = breakMinutes * 60;
+
+    stopTimer();
+    state.phase = 'work';
+    state.remainingSeconds = workDuration;
+    updateDisplay();
+    closeModal();
+  };
+
   startButton.addEventListener('click', startTimer);
   pauseButton.addEventListener('click', pauseTimer);
   resetButton.addEventListener('click', resetTimer);
   viewSelect?.addEventListener('change', handleViewChange);
+  settingsButton?.addEventListener('click', openModal);
+  settingsForm?.addEventListener('submit', handleSettingsSubmit);
+  settingsModal?.querySelectorAll('[data-role="modal-close"]').forEach((btn) => {
+    btn.addEventListener('click', closeModal);
+  });
+  settingsModal?.querySelector('.modal__overlay')?.addEventListener('click', closeModal);
 
   setView(document.body.getAttribute('data-view') || '1');
   updateDisplay();
