@@ -190,8 +190,9 @@ body[data-view="2"] .timer__view--analog {
 .circle-timer__track,
 .circle-timer__progress {
   fill: none;
-  stroke-width: 16;
+  stroke-width: 25;
   stroke-linecap: butt;
+
 }
 
 .circle-timer__track {
@@ -205,16 +206,11 @@ body[data-view="2"] .timer__view--analog {
 
 .circle-timer__center {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  inset: 0;
+  display: grid;
+  place-items: center;
   gap: 8px;
   text-align: center;
-  transform: translate(-50%, -50%);
-  width: 100%;
 }
 
 .circle-timer .timer__phase {
