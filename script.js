@@ -20,6 +20,8 @@
     intervalId: null,
   };
 
+  const getPhaseDuration = () => (state.phase === 'work' ? WORK_DURATION : BREAK_DURATION);
+
   const formatTime = (totalSeconds) => {
     const minutes = Math.floor(totalSeconds / 60)
       .toString()
@@ -41,6 +43,7 @@
     });
 
     updateProgressCircle();
+    updateFlatProgress();
   };
 
   const updateProgressCircle = () => {
@@ -52,6 +55,13 @@
     progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
     progressCircle.style.strokeDashoffset = circumference * (1 - progress);
     progressCircle.style.stroke = state.phase === 'work' ? 'var(--accent)' : '#38bdf8';
+  };
+
+  const updateFlatProgress = () => {
+    if (!flatProgressFill) return;
+    const duration = getPhaseDuration();
+    const progressRatio = Math.max(0, Math.min(1, state.remainingSeconds / duration));
+    flatProgressFill.style.width = `${progressRatio * 100}%`;
   };
 
   const stopTimer = () => {
@@ -86,7 +96,7 @@
 
   const switchPhase = () => {
     state.phase = state.phase === 'work' ? 'break' : 'work';
-    state.remainingSeconds = state.phase === 'work' ? WORK_DURATION : BREAK_DURATION;
+    state.remainingSeconds = getPhaseDuration();
     updateDisplay();
     beep();
   };
