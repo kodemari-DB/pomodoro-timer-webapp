@@ -44,7 +44,7 @@
 
     const isWork = state.phase === 'work';
     phaseLabels.forEach((label) => {
-      label.textContent = isWork ? '作業中' : '休憩中';
+      label.textContent = isWork ? 'Work' : 'Break';
       label.classList.toggle('timer__phase--break', !isWork);
     });
 
