@@ -13,6 +13,7 @@
         <h1>ポモドーロタイマー</h1>
       </div>
       <div class="view-switcher">
+        <button class="btn btn--ghost" id="settingsButton" type="button">Setting</button>
         <label for="viewSelect">View</label>
         <select id="viewSelect" aria-label="Select view">
           <option value="1">Classic</option>
@@ -55,7 +56,6 @@
             <span class="timer__time" data-role="time-display">25:00</span>
           </div>
         </div>
-      </div>
 
       <div class="timer__view timer__view--flat" aria-hidden="true" data-view="3">
         <div class="flat-panel">
@@ -72,14 +72,38 @@
             <span data-role="phase-label">Work</span>
           </div>
         </div>
-      </div>
 
-      <div class="timer__controls">
-        <button class="btn" id="startButton">Start</button>
-        <button class="btn" id="pauseButton">Pause</button>
-        <button class="btn btn--secondary" id="resetButton">Reset</button>
+        <div class="timer__controls">
+          <button class="btn" id="startButton">Start</button>
+          <button class="btn" id="pauseButton">Pause</button>
+          <button class="btn btn--secondary" id="resetButton">Reset</button>
+        </div>
       </div>
     </section>
+
+    <div class="modal" id="settingsModal" aria-hidden="true">
+      <div class="modal__overlay" data-role="modal-overlay"></div>
+      <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+        <header class="modal__header">
+          <h2 id="settingsTitle">Setting</h2>
+          <button class="modal__close" type="button" aria-label="Close settings" data-role="modal-close">&times;</button>
+        </header>
+        <form class="modal__form" id="settingsForm">
+          <label class="modal__field">
+            <span>作業時間（分）</span>
+            <input type="number" id="workMinutes" name="workMinutes" min="1" max="180" value="25" required />
+          </label>
+          <label class="modal__field">
+            <span>休憩時間（分）</span>
+            <input type="number" id="breakMinutes" name="breakMinutes" min="1" max="180" value="5" required />
+          </label>
+          <div class="modal__actions">
+            <button type="button" class="btn btn--ghost" data-role="modal-close">キャンセル</button>
+            <button type="submit" class="btn">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </main>
 
   <script src="script.js"></script>
