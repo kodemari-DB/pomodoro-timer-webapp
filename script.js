@@ -1,6 +1,7 @@
 (() => {
   const WORK_DURATION = 25 * 60; // seconds
   const BREAK_DURATION = 5 * 60; // seconds
+  const RING_FULL_SECONDS = 60 * 60; // progress ring always represents 60 minutes
 
   const phaseLabels = document.querySelectorAll('[data-role="phase-label"]');
   const timeDisplays = document.querySelectorAll('[data-role="time-display"]');
@@ -44,10 +45,11 @@
     if (!progressCircle) return;
     const radius = progressCircle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
-    const totalSeconds = state.phase === 'work' ? WORK_DURATION : BREAK_DURATION;
-    const progress = state.remainingSeconds / totalSeconds;
-    progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
-    progressCircle.style.strokeDashoffset = `${circumference * (1 - progress)}`;
+
+    const progress = Math.max(0, Math.min(1, state.remainingSeconds / RING_FULL_SECONDS));
+    progressCircle.style.strokeDasharray = `${progress * circumference} ${circumference}`;
+    progressCircle.style.strokeDashoffset = '0';
+
 
     progressCircle.style.stroke = state.phase === 'work' ? 'var(--accent)' : '#38bdf8';
   };
