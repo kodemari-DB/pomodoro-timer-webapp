@@ -45,11 +45,9 @@
     if (!progressCircle) return;
     const radius = progressCircle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
-
     const progress = Math.max(0, Math.min(1, state.remainingSeconds / RING_FULL_SECONDS));
     progressCircle.style.strokeDasharray = `${progress * circumference} ${circumference}`;
     progressCircle.style.strokeDashoffset = '0';
-
 
     progressCircle.style.stroke = state.phase === 'work' ? 'var(--accent)' : '#38bdf8';
   };
