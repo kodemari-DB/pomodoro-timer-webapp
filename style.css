@@ -119,12 +119,18 @@ main.app {
 
 .timer__view {
   display: none;
+  width: 100%;
+  max-width: 360px;
+  aspect-ratio: 1;
+  margin: 0 auto;
 }
 
 body[data-view="1"] .timer__view--classic,
 body[data-view="2"] .timer__view--analog,
 body[data-view="3"] .timer__view--flat {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .timer__display {
@@ -133,6 +139,12 @@ body[data-view="3"] .timer__view--flat {
   border-radius: 16px;
   padding: 24px;
   text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .timer__phase {
@@ -232,9 +244,8 @@ body[data-view="3"] .timer__view--flat {
   position: relative;
   display: grid;
   place-items: center;
-  width: min(340px, 100%);
-  aspect-ratio: 1;
-  margin: 0 auto;
+  width: 100%;
+  height: 100%;
   background: radial-gradient(circle at 30% 30%, rgba(249, 115, 22, 0.15), transparent 55%),
     rgba(255, 255, 255, 0.02);
   border-radius: 24px;
@@ -392,6 +403,8 @@ body[data-view="3"] .settings__field input {
   display: grid;
   gap: 12px;
   box-shadow: none;
+  width: 100%;
+  height: 100%;
 }
 
 .flat-panel__header {
@@ -431,6 +444,7 @@ body[data-view="3"] .settings__field input {
   background: rgba(0, 0, 0, 0.04);
   border-radius: 999px;
   border: 1px solid var(--border);
+  position: relative;
   overflow: hidden;
 }
 
@@ -438,7 +452,9 @@ body[data-view="3"] .settings__field input {
   height: 100%;
   width: 100%;
   background: var(--accent);
-  transform-origin: left;
+  position: absolute;
+  top: 0;
+  right: 0;
   transition: width 0.4s ease;
 }
 

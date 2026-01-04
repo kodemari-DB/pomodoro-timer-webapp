@@ -177,7 +177,7 @@
     if (!subtitle) return;
     const work = workMinutes ?? state.settings.workSeconds / 60;
     const rest = breakMinutes ?? state.settings.breakSeconds / 60;
-    subtitle.textContent = `Work ${work} min / Break ${rest} min`;
+    subtitle.textContent = `作業${work}分 / 休憩${rest}分`;
   };
 
   startButton.addEventListener('click', startTimer);
