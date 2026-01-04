@@ -12,7 +12,11 @@
   const resetButton = document.getElementById('resetButton');
   const workMinutesInput = document.getElementById('workMinutes');
   const breakMinutesInput = document.getElementById('breakMinutes');
-  const applySettingsButton = document.getElementById('applySettingsButton');
+  const settingsButton = document.getElementById('settingsButton');
+  const settingsModal = document.getElementById('settingsModal');
+  const settingsForm = document.getElementById('settingsForm');
+  const modalOverlay = settingsModal?.querySelector('[data-role="modal-overlay"]');
+  const modalCloseButtons = settingsModal?.querySelectorAll('[data-role="modal-close"]');
   const subtitle = document.querySelector('.app__subtitle');
 
   const state = {
@@ -173,6 +177,18 @@
     updateDisplay();
   };
 
+  const openSettings = () => {
+    if (!settingsModal) return;
+    settingsModal.classList.add('is-open');
+    settingsModal.setAttribute('aria-hidden', 'false');
+  };
+
+  const closeSettings = () => {
+    if (!settingsModal) return;
+    settingsModal.classList.remove('is-open');
+    settingsModal.setAttribute('aria-hidden', 'true');
+  };
+
   const updateSubtitle = (workMinutes, breakMinutes) => {
     if (!subtitle) return;
     const work = workMinutes ?? state.settings.workSeconds / 60;
@@ -184,7 +200,19 @@
   pauseButton.addEventListener('click', pauseTimer);
   resetButton.addEventListener('click', resetTimer);
   viewSelect?.addEventListener('change', handleViewChange);
-  applySettingsButton?.addEventListener('click', applySettings);
+  settingsButton?.addEventListener('click', openSettings);
+  modalOverlay?.addEventListener('click', closeSettings);
+  modalCloseButtons?.forEach((button) => button.addEventListener('click', closeSettings));
+  settingsForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    applySettings();
+    closeSettings();
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      closeSettings();
+    }
+  });
 
   setView(document.body.getAttribute('data-view') || '1');
   updateSubtitle();
