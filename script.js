@@ -1,6 +1,4 @@
 (() => {
-  let workDuration = 25 * 60; // seconds
-  let breakDuration = 5 * 60; // seconds
   const RING_FULL_SECONDS = 60 * 60; // progress ring always represents 60 minutes
 
   const phaseLabels = document.querySelectorAll('[data-role="phase-label"]');
@@ -12,20 +10,23 @@
   const startButton = document.getElementById('startButton');
   const pauseButton = document.getElementById('pauseButton');
   const resetButton = document.getElementById('resetButton');
-  const settingsButton = document.getElementById('settingsButton');
-  const settingsModal = document.getElementById('settingsModal');
-  const settingsForm = document.getElementById('settingsForm');
   const workMinutesInput = document.getElementById('workMinutes');
   const breakMinutesInput = document.getElementById('breakMinutes');
+  const applySettingsButton = document.getElementById('applySettingsButton');
+  const subtitle = document.querySelector('.app__subtitle');
 
   const state = {
     phase: 'work', // 'work' | 'break'
-    remainingSeconds: workDuration,
+    settings: {
+      workSeconds: 25 * 60,
+      breakSeconds: 5 * 60,
+    },
+    remainingSeconds: 25 * 60,
     isRunning: false,
     intervalId: null,
   };
 
-  const getPhaseDuration = () => (state.phase === 'work' ? workDuration : breakDuration);
+  const getPhaseDuration = () => (state.phase === 'work' ? state.settings.workSeconds : state.settings.breakSeconds);
 
   const formatTime = (totalSeconds) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -43,7 +44,7 @@
 
     const isWork = state.phase === 'work';
     phaseLabels.forEach((label) => {
-      label.textContent = isWork ? '作業中' : '休憩中';
+      label.textContent = isWork ? 'Work' : 'Break';
       label.classList.toggle('timer__phase--break', !isWork);
     });
 
@@ -129,7 +130,7 @@
   const resetTimer = () => {
     stopTimer();
     state.phase = 'work';
-    state.remainingSeconds = workDuration;
+    state.remainingSeconds = state.settings.workSeconds;
     updateDisplay();
   };
 
@@ -149,44 +150,43 @@
     setView(viewId);
   };
 
-  const openModal = () => {
-    settingsModal?.classList.add('is-open');
-    settingsModal?.setAttribute('aria-hidden', 'false');
-    workMinutesInput.value = Math.round(workDuration / 60).toString();
-    breakMinutesInput.value = Math.round(breakDuration / 60).toString();
-  };
+  const applySettings = () => {
+    const parseMinutes = (value, fallback) => {
+      const minutes = Number(value);
+      if (!Number.isFinite(minutes)) return fallback;
+      const clamped = Math.min(Math.max(Math.floor(minutes), 1), 180);
+      return clamped;
+    };
 
-  const closeModal = () => {
-    settingsModal?.classList.remove('is-open');
-    settingsModal?.setAttribute('aria-hidden', 'true');
-  };
+    const workMinutes = parseMinutes(workMinutesInput?.value, state.settings.workSeconds / 60);
+    const breakMinutes = parseMinutes(breakMinutesInput?.value, state.settings.breakSeconds / 60);
 
-  const handleSettingsSubmit = (event) => {
-    event.preventDefault();
-    const workMinutes = Math.max(1, Math.min(180, Number(workMinutesInput.value) || 25));
-    const breakMinutes = Math.max(1, Math.min(180, Number(breakMinutesInput.value) || 5));
+    state.settings.workSeconds = workMinutes * 60;
+    state.settings.breakSeconds = breakMinutes * 60;
 
-    workDuration = workMinutes * 60;
-    breakDuration = breakMinutes * 60;
+    if (workMinutesInput) workMinutesInput.value = workMinutes.toString();
+    if (breakMinutesInput) breakMinutesInput.value = breakMinutes.toString();
 
     stopTimer();
-    state.phase = 'work';
-    state.remainingSeconds = workDuration;
+    state.remainingSeconds = getPhaseDuration();
+    updateSubtitle(workMinutes, breakMinutes);
     updateDisplay();
-    closeModal();
+  };
+
+  const updateSubtitle = (workMinutes, breakMinutes) => {
+    if (!subtitle) return;
+    const work = workMinutes ?? state.settings.workSeconds / 60;
+    const rest = breakMinutes ?? state.settings.breakSeconds / 60;
+    subtitle.textContent = `作業${work}分 / 休憩${rest}分`;
   };
 
   startButton.addEventListener('click', startTimer);
   pauseButton.addEventListener('click', pauseTimer);
   resetButton.addEventListener('click', resetTimer);
   viewSelect?.addEventListener('change', handleViewChange);
-  settingsButton?.addEventListener('click', openModal);
-  settingsForm?.addEventListener('submit', handleSettingsSubmit);
-  settingsModal?.querySelectorAll('[data-role="modal-close"]').forEach((btn) => {
-    btn.addEventListener('click', closeModal);
-  });
-  settingsModal?.querySelector('.modal__overlay')?.addEventListener('click', closeModal);
+  applySettingsButton?.addEventListener('click', applySettings);
 
   setView(document.body.getAttribute('data-view') || '1');
+  updateSubtitle();
   updateDisplay();
 })();

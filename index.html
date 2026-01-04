@@ -11,7 +11,6 @@
     <header class="app__header">
       <div>
         <h1>ポモドーロタイマー</h1>
-        <p class="app__subtitle">作業25分 / 休憩5分</p>
       </div>
       <div class="view-switcher">
         <button class="btn btn--ghost" id="settingsButton" type="button">Setting</button>
@@ -24,42 +23,53 @@
       </div>
     </header>
 
-    <section class="timer-shell">
-      <div class="timer">
-        <div class="timer__view timer__view--classic" data-view="1">
-          <div class="timer__display">
-            <span class="timer__phase" data-role="phase-label">作業中</span>
+    <section class="settings" aria-label="タイマー設定">
+      <div class="settings__fields">
+        <label class="settings__field">
+          <span>作業分</span>
+          <input type="number" id="workMinutes" name="workMinutes" min="1" max="180" value="25" inputmode="numeric" />
+        </label>
+        <label class="settings__field">
+          <span>休憩分</span>
+          <input type="number" id="breakMinutes" name="breakMinutes" min="1" max="180" value="5" inputmode="numeric" />
+        </label>
+      </div>
+      <button class="btn btn--ghost settings__apply" id="applySettingsButton">適用</button>
+    </section>
+
+    <section class="timer">
+      <div class="timer__view timer__view--classic" data-view="1">
+        <div class="timer__display">
+          <span class="timer__phase" data-role="phase-label">Work</span>
+          <span class="timer__time" data-role="time-display">25:00</span>
+        </div>
+      </div>
+
+      <div class="timer__view timer__view--analog" aria-hidden="true" data-view="2">
+        <div class="circle-timer">
+          <svg class="circle-timer__svg" viewBox="0 0 260 260" role="img" aria-label="残り時間の円形表示">
+            <circle class="circle-timer__track" cx="130" cy="130" r="110" />
+            <circle class="circle-timer__progress" id="progressCircle" cx="130" cy="130" r="110" />
+          </svg>
+          <div class="circle-timer__center">
+            <span class="timer__phase" data-role="phase-label">Work</span>
             <span class="timer__time" data-role="time-display">25:00</span>
           </div>
         </div>
 
-        <div class="timer__view timer__view--analog" aria-hidden="true" data-view="2">
-          <div class="circle-timer">
-            <svg class="circle-timer__svg" viewBox="0 0 260 260" role="img" aria-label="残り時間の円形表示">
-              <circle class="circle-timer__track" cx="130" cy="130" r="110" />
-              <circle class="circle-timer__progress" id="progressCircle" cx="130" cy="130" r="110" />
-            </svg>
-            <div class="circle-timer__center">
-              <span class="timer__phase" data-role="phase-label">作業中</span>
-              <span class="timer__time" data-role="time-display">25:00</span>
-            </div>
+      <div class="timer__view timer__view--flat" aria-hidden="true" data-view="3">
+        <div class="flat-panel">
+          <div class="flat-panel__header">
+            <span class="flat-panel__label">ポモドーロ</span>
+            <span class="flat-panel__phase" data-role="phase-label">Work</span>
           </div>
-        </div>
-
-        <div class="timer__view timer__view--flat" aria-hidden="true" data-view="3">
-          <div class="flat-panel">
-            <div class="flat-panel__header">
-              <span class="flat-panel__label">ポモドーロ</span>
-              <span class="flat-panel__phase" data-role="phase-label">作業中</span>
-            </div>
-            <div class="flat-panel__time" data-role="time-display">25:00</div>
-            <div class="flat-progress" aria-hidden="true">
-              <div class="flat-progress__fill"></div>
-            </div>
-            <div class="flat-panel__legend">
-              <span>残り時間</span>
-              <span data-role="phase-label">作業中</span>
-            </div>
+          <div class="flat-panel__time" data-role="time-display">25:00</div>
+          <div class="flat-progress" aria-hidden="true">
+            <div class="flat-progress__fill"></div>
+          </div>
+          <div class="flat-panel__legend">
+            <span>残り時間</span>
+            <span data-role="phase-label">Work</span>
           </div>
         </div>
 
