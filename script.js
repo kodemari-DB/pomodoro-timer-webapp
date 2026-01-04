@@ -1,6 +1,4 @@
 (() => {
-  const WORK_DURATION = 25 * 60; // seconds
-  const BREAK_DURATION = 5 * 60; // seconds
   const RING_FULL_SECONDS = 60 * 60; // progress ring always represents 60 minutes
 
   const phaseLabels = document.querySelectorAll('[data-role="phase-label"]');
@@ -12,15 +10,23 @@
   const startButton = document.getElementById('startButton');
   const pauseButton = document.getElementById('pauseButton');
   const resetButton = document.getElementById('resetButton');
+  const workMinutesInput = document.getElementById('workMinutes');
+  const breakMinutesInput = document.getElementById('breakMinutes');
+  const applySettingsButton = document.getElementById('applySettingsButton');
+  const subtitle = document.querySelector('.app__subtitle');
 
   const state = {
     phase: 'work', // 'work' | 'break'
-    remainingSeconds: WORK_DURATION,
+    settings: {
+      workSeconds: 25 * 60,
+      breakSeconds: 5 * 60,
+    },
+    remainingSeconds: 25 * 60,
     isRunning: false,
     intervalId: null,
   };
 
-  const getPhaseDuration = () => (state.phase === 'work' ? WORK_DURATION : BREAK_DURATION);
+  const getPhaseDuration = () => (state.phase === 'work' ? state.settings.workSeconds : state.settings.breakSeconds);
 
   const formatTime = (totalSeconds) => {
     const minutes = Math.floor(totalSeconds / 60)
@@ -38,7 +44,7 @@
 
     const isWork = state.phase === 'work';
     phaseLabels.forEach((label) => {
-      label.textContent = isWork ? '作業中' : '休憩中';
+      label.textContent = isWork ? 'Work' : 'Break';
       label.classList.toggle('timer__phase--break', !isWork);
     });
 
@@ -124,7 +130,7 @@
   const resetTimer = () => {
     stopTimer();
     state.phase = 'work';
-    state.remainingSeconds = WORK_DURATION;
+    state.remainingSeconds = state.settings.workSeconds;
     updateDisplay();
   };
 
@@ -144,11 +150,43 @@
     setView(viewId);
   };
 
+  const applySettings = () => {
+    const parseMinutes = (value, fallback) => {
+      const minutes = Number(value);
+      if (!Number.isFinite(minutes)) return fallback;
+      const clamped = Math.min(Math.max(Math.floor(minutes), 1), 180);
+      return clamped;
+    };
+
+    const workMinutes = parseMinutes(workMinutesInput?.value, state.settings.workSeconds / 60);
+    const breakMinutes = parseMinutes(breakMinutesInput?.value, state.settings.breakSeconds / 60);
+
+    state.settings.workSeconds = workMinutes * 60;
+    state.settings.breakSeconds = breakMinutes * 60;
+
+    if (workMinutesInput) workMinutesInput.value = workMinutes.toString();
+    if (breakMinutesInput) breakMinutesInput.value = breakMinutes.toString();
+
+    stopTimer();
+    state.remainingSeconds = getPhaseDuration();
+    updateSubtitle(workMinutes, breakMinutes);
+    updateDisplay();
+  };
+
+  const updateSubtitle = (workMinutes, breakMinutes) => {
+    if (!subtitle) return;
+    const work = workMinutes ?? state.settings.workSeconds / 60;
+    const rest = breakMinutes ?? state.settings.breakSeconds / 60;
+    subtitle.textContent = `Work ${work} min / Break ${rest} min`;
+  };
+
   startButton.addEventListener('click', startTimer);
   pauseButton.addEventListener('click', pauseTimer);
   resetButton.addEventListener('click', resetTimer);
   viewSelect?.addEventListener('change', handleViewChange);
+  applySettingsButton?.addEventListener('click', applySettings);
 
   setView(document.body.getAttribute('data-view') || '1');
+  updateSubtitle();
   updateDisplay();
 })();
