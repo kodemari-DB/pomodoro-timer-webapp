@@ -380,6 +380,7 @@ body[data-view="3"] .view-switcher select {
   background: rgba(0, 0, 0, 0.04);
   border-radius: 999px;
   border: 1px solid var(--border);
+  position: relative;
   overflow: hidden;
 }
 
@@ -387,7 +388,9 @@ body[data-view="3"] .view-switcher select {
   height: 100%;
   width: 100%;
   background: var(--accent);
-  transform-origin: left;
+  position: absolute;
+  top: 0;
+  right: 0;
   transition: width 0.4s ease;
 }
 
