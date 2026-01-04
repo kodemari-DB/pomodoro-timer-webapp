@@ -190,8 +190,9 @@ body[data-view="2"] .timer__view--analog {
 .circle-timer__track,
 .circle-timer__progress {
   fill: none;
-  stroke-width: 16;
+  stroke-width: 25;
   stroke-linecap: butt;
+
 }
 
 .circle-timer__track {
